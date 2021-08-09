@@ -1,0 +1,39 @@
+global.MockBrowser = require('mock-browser').mocks.MockBrowser;
+var mock = new MockBrowser();
+global.document = MockBrowser.createDocument();
+global.window = MockBrowser.createWindow();
+
+// The required node modules
+THREE = require('three')
+gl    = require("gl")(1, 1)
+
+// Parameters (the missing one is the camera position, see below)
+width  = 600
+height = 400
+
+// THREE.js business starts here
+scene = new THREE.Scene()
+
+// camera attributes
+VIEW_ANGLE = 45
+ASPECT = width / height
+NEAR = 0.1
+FAR  = 100
+
+// set up camera
+camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR)
+
+scene.add(camera)
+camera.position.set(0, 2, 2)
+camera.lookAt(scene.position)
+
+// mock object, not used in our test case, might be problematic for some workflow
+gl.canvas = new Object()
+gl.canvas.width = 200;
+gl.canvas.height = 200;
+
+// The width / height we set here doesn't matter
+renderer = new THREE.WebGLRenderer({
+    context: gl     // Use the headless-gl context for drawing offscreen
+})
+

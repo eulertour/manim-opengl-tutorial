@@ -1,0 +1,17 @@
+{
+    "name": "three-server",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@grpc/grpc-js": "^1.3.0",
+        "@grpc/proto-loader": "^0.6.1",
+        "mock-browser": "^0.92.14",
+        "three": "file:../three.js"
+    }
+}

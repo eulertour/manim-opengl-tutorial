@@ -1,0 +1,140 @@
+syntax = "proto3";
+package testservice;
+
+service TestService {
+  rpc GetHello(HelloRequest) returns (HelloResponse) {}
+}
+message HelloRequest {}
+message HelloResponse {
+  string response = 1;
+}
+
+service GeometryService {
+  rpc BoxGeometry(BoxGeometryRequest) returns (GeometryResponse) {}
+  rpc SphereGeometry(SphereGeometryRequest) returns (GeometryResponse) {}
+  rpc TorusKnotGeometry(TorusKnotGeometryRequest) returns (GeometryResponse) {}
+  rpc IcosahedronGeometry(IcosahedronGeometryRequest) returns (GeometryResponse) {}
+  rpc TetrahedronGeometry(TetrahedronGeometryRequest) returns (GeometryResponse) {}
+  rpc CylinderGeometry(CylinderGeometryRequest) returns (GeometryResponse) {}
+  rpc ConeGeometry(ConeGeometryRequest) returns (GeometryResponse) {}
+  rpc CircleGeometry(CircleGeometryRequest) returns (GeometryResponse) {}
+  rpc PlaneGeometry(PlaneGeometryRequest) returns (GeometryResponse) {}
+  rpc ExtrudeGeometry(ExtrudeGeometryRequest) returns (GeometryResponse) {}
+}
+
+service MaterialService {
+  rpc BasicMaterial(BasicMaterialRequest) returns (MaterialResponse) {}
+  rpc PhongMaterial(PhongMaterialRequest) returns (MaterialResponse) {}
+  rpc StandardMaterial(StandardMaterialRequest) returns (MaterialResponse) {}
+}
+
+message BasicMaterialRequest {}
+message PhongMaterialRequest {}
+message StandardMaterialRequest {}
+
+message MaterialResponse {
+  string vertex_shader = 1;
+  string fragment_shader = 2;
+}
+
+message GeometryResponse {
+  repeated float position = 1;
+  repeated float normal = 2;
+  repeated float uv = 3;
+  repeated int32 index = 4;
+}
+
+message BoxGeometryRequest {
+  float width = 1;
+  float height = 2;
+  float depth = 3;
+  int32 width_segments = 4;
+  int32 height_segments = 5;
+  int32 depth_segments = 6;
+  bool wireframe = 7;
+}
+
+message SphereGeometryRequest {
+  float radius = 1;
+  int32 width_segments = 2;
+  int32 height_segments = 3;
+  float phi_start = 4;
+  float phi_length = 5;
+  float theta_start = 6;
+  float theta_length = 7;
+  bool wireframe = 8;
+}
+
+message TorusKnotGeometryRequest {
+  float torus_radius = 1;
+  float tube_radius = 2;
+  int32 tubular_segments = 3;
+  int32 radial_segments = 4;
+  int32 p = 5;
+  int32 q = 6;
+  bool wireframe = 7;
+}
+
+message IcosahedronGeometryRequest {
+  float radius = 1;
+  int32 detail = 2;
+  bool wireframe = 3;
+}
+
+message TetrahedronGeometryRequest {
+  float radius = 1;
+  int32 detail = 2;
+  bool wireframe = 3;
+}
+
+message CylinderGeometryRequest {
+  float radius_top = 1;
+  float radius_bottom = 2;
+  float height = 3;
+  int32 radial_segments = 4;
+  int32 height_segments = 5;
+  bool open_ended = 6;
+  float theta_start = 7;
+  float theta_length = 8;
+  bool wireframe = 9;
+}
+
+message ConeGeometryRequest {
+  float radius = 1;
+  float height = 2;
+  int32 radial_segments = 3;
+  int32 height_segments = 4;
+  bool open_ended = 5;
+  float theta_start = 6;
+  float theta_length = 7;
+  bool wireframe = 8;
+}
+
+message CircleGeometryRequest {
+  float radius = 1;
+  int32 segments = 2;
+  float theta_start = 3;
+  float theta_length = 4;
+  bool wireframe = 5;
+}
+
+message PlaneGeometryRequest {
+  float width = 1;
+  float height = 2;
+  int32 width_segments = 3;
+  int32 height_segments = 4;
+  bool wireframe = 5;
+}
+
+message ExtrudeGeometryRequest {
+  repeated float points = 1;
+  repeated int32 path_indices = 2;
+  int32 steps = 3;
+  float depth = 4;
+  bool bevel_enabled = 5;
+  float bevel_thickness = 6;
+  float bevel_size = 7;
+  float bevel_offset = 8;
+  int32 bevel_segments = 9;
+  bool wireframe = 10;
+}
