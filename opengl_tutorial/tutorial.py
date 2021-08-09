@@ -1,6 +1,7 @@
 import collections
 
-import dearpygui.core
+
+import dearpygui.dearpygui as dpg
 
 import manim.utils.opengl as opengl
 import manim.utils.space_ops as space_ops
@@ -8,6 +9,7 @@ import tutorial_utils
 from manim import *
 from manim.opengl import *
 from manim.renderer.opengl_renderer import OpenGLCamera
+
 
 
 class OpenGLPipeline(Scene):
@@ -254,7 +256,7 @@ class HalfScreenTriangle(Scene):
             self.add(dot)
 
         def slider_callback(sender, data):
-            point = dearpygui.core.get_value(sender)
+            point = dpg.get_value(sender)
             mesh.attributes["position"][data] = np.array(point)
 
         for i in range(3):
@@ -343,7 +345,7 @@ class ProjectionVisualization(Scene):
         #     t += dt
 
         def slider_callback(sender, data):
-            t = dearpygui.core.get_value(sender)
+            t = dpg.get_value(sender)
             start = untransformed_points
             end = transformed_points
             mesh.attributes["position"] = (1 - t) * start + t * end
@@ -432,17 +434,17 @@ class ModelVisualization(Scene):
 
         def translation_callback(sender, data):
             nonlocal translation_matrix
-            coords = dearpygui.core.get_value(sender)
+            coords = dpg.get_value(sender)
             translation_matrix = opengl.translation_matrix(*coords)
 
         def rotation_callback(sender, data):
             nonlocal rotation_matrix
-            coords = dearpygui.core.get_value(sender)
+            coords = dpg.get_value(sender)
             rotation_matrix = opengl.rotation_matrix(*coords)
 
         def scale_callback(sender, data):
             nonlocal scale_matrix
-            val = dearpygui.core.get_value(sender)
+            val = dpg.get_value(sender)
             scale_matrix = opengl.scale_matrix(val)
 
         self.widgets.extend(
@@ -1279,7 +1281,7 @@ class ThreeDLogo(Scene):
         # # Circle updaters.
         # def circle_callback(sender, _):
         #     nonlocal circle_diffuse
-        #     circle_diffuse = tuple(np.array(dearpygui.core.get_value(sender)[:3]) / 255)
+        #     circle_diffuse = tuple(np.array(dpg.get_value(sender)[:3]) / 255)
 
         # def update_circle(mesh):
         #     mesh.shader.set_uniform("diffuse", circle_diffuse)
@@ -1289,7 +1291,7 @@ class ThreeDLogo(Scene):
         # # Square updaters.
         # def square_callback(sender, _):
         #     nonlocal square_diffuse
-        #     square_diffuse = tuple(np.array(dearpygui.core.get_value(sender)[:3]) / 255)
+        #     square_diffuse = tuple(np.array(dpg.get_value(sender)[:3]) / 255)
 
         # def update_square(mesh):
         #     mesh.shader.set_uniform("diffuse", square_diffuse)
@@ -1300,7 +1302,7 @@ class ThreeDLogo(Scene):
         # def triangle_callback(sender, _):
         #     nonlocal triangle_diffuse
         #     triangle_diffuse = tuple(
-        #         np.array(dearpygui.core.get_value(sender)[:3]) / 255
+        #         np.array(dpg.get_value(sender)[:3]) / 255
         #     )
 
         # def update_triangle(mesh):
