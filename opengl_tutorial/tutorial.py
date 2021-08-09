@@ -1,7 +1,6 @@
 import collections
 
-
-import dearpygui.dearpygui as dpg
+import dearpygui.core
 
 import manim.utils.opengl as opengl
 import manim.utils.space_ops as space_ops
@@ -11,66 +10,65 @@ from manim.opengl import *
 from manim.renderer.opengl_renderer import OpenGLCamera
 
 
-
 class OpenGLPipeline(Scene):
     def construct(self):
         # self.skip_animation_preview = True
-        diagrams = OpenGLVGroup()
-        vertices = OpenGLVGroup(
-            OpenGLDot().move_to(-1 * RIGHT + 2 * UP),
-            OpenGLDot().move_to(-2 * RIGHT - 1 * UP),
-            OpenGLDot().move_to(1 * RIGHT + 0 * UP),
+        diagrams = VGroup()
+        vertices = VGroup(
+            Dot().move_to(-1 * RIGHT + 2 * UP),
+            Dot().move_to(-2 * RIGHT - 1 * UP),
+            Dot().move_to(1 * RIGHT + 0 * UP),
         ).shift(0.5 * DOWN)
 
-        vertices_label = OpenGLText("Vertices").next_to(vertices, UP, buff=0.5)
+        vertices_label = Text("Vertices").next_to(vertices, UP, buff=0.5)
         self.add(vertices, vertices_label)
 
         # Vertices.
         self.play(FadeIn(vertices_label, shift=DOWN))
         self.interactive_embed()
 
-        vertices_diagram = OpenGLVGroup(vertices_label, vertices)
+        vertices_diagram = VGroup(vertices_label, vertices)
         diagrams.add(vertices_diagram.copy())
 
         # Vertex Shader.
-        vertex_shader_label = OpenGLText("Vertex Shader").move_to(
+        vertex_shader_label = Text("Vertex Shader").move_to(
             vertices_label.get_center()
         )
         self.play(FadeOut(vertices_label, shift=UP))
         self.play(FadeIn(vertex_shader_label, shift=DOWN))
 
-        vertex_shader_diagram = OpenGLVGroup(vertex_shader_label, vertices)
+        vertex_shader_diagram = VGroup(vertex_shader_label, vertices)
         diagrams.add(vertex_shader_diagram.copy())
         self.interactive_embed()
 
         # self.skip_animation_preview = False
         # Primitives Generation.
-        primitives_generation_label = OpenGLText("Primitives Generation").move_to(
+        primitives_generation_label = Text("Primitives Generation").move_to(
             vertex_shader_label.get_center()
         )
         self.play(FadeOut(vertex_shader_label, shift=UP))
         self.play(FadeIn(primitives_generation_label, shift=DOWN))
-        triangle = OpenGLPolygon(*[dot.get_center() for dot in vertices])
+        triangle = Polygon(*[dot.get_center() for dot in vertices], color=WHITE)
         self.play(Create(triangle))
         self.play(FadeOut(vertices))
 
-        primitives_generation_diagram = OpenGLVGroup(
+        primitives_generation_diagram = VGroup(
             primitives_generation_label, triangle
         )
         diagrams.add(primitives_generation_diagram.copy())
         self.interactive_embed()
 
         # Rasterization.
-        rasterization_label = OpenGLText("Rasterization").move_to(
+        rasterization_label = Text("Rasterization").move_to(
             primitives_generation_label.get_center()
         )
         self.play(FadeOut(primitives_generation_label, shift=UP))
         self.play(FadeIn(rasterization_label, shift=DOWN))
 
-        top_left = OpenGLDot(
+        top_left = Dot(
             triangle.get_left()[0] * RIGHT + triangle.get_top()[1] * UP
         )
-        bottom_right = OpenGLDot(
+        bottom_right = Dot(
             triangle.get_right()[0] * RIGHT + triangle.get_bottom()[1] * UP
         )
         grid_width = bottom_right.get_center()[0] - top_left.get_center()[0]
@@ -84,7 +82,7 @@ class OpenGLPipeline(Scene):
             vec = end - start
             triangle_normals.append(normalize(rotate_vector(vec, PI / 2)))
 
-        def point_inside_triangle(point: np.ndarray, triangle: OpenGLPolygon):
+        def point_inside_triangle(point: np.ndarray, triangle: Polygon):
             triangle_points = triangle.get_vertices()
             for i in range(3):
                 translated_point = point - triangle_points[i]
@@ -94,9 +92,9 @@ class OpenGLPipeline(Scene):
             return True
 
         square_side_length = 0.18
-        pixels = OpenGLVGroup()
-        outside_pixels = OpenGLVGroup()
-        inside_pixels = OpenGLVGroup()
+        pixels = VGroup()
+        outside_pixels = VGroup()
+        inside_pixels = VGroup()
         for j in range(int(grid_height // square_side_length) + 1):
             for i in range(int(grid_width // square_side_length) + 1):
                 # Place a square.
@@ -108,7 +106,7 @@ class OpenGLPipeline(Scene):
                     fill_color = WHITE
                 else:
                     fill_color = BLACK
-                pixel = OpenGLSquare(
+                pixel = Square(
                     side_length=0.15,
                     stroke_width=1,
                     fill_color=fill_color,
@@ -123,36 +121,36 @@ class OpenGLPipeline(Scene):
         self.play(Create(pixels))
         self.play(FadeOut(triangle), FadeOut(outside_pixels))
 
-        rasterization_diagram = OpenGLVGroup(rasterization_label, inside_pixels)
+        rasterization_diagram = VGroup(rasterization_label, inside_pixels)
         diagrams.add(rasterization_diagram.copy())
         self.interactive_embed()
 
         # Fragment Shader.
-        fragment_shader_label = OpenGLText("Fragment Shader").move_to(
+        fragment_shader_label = Text("Fragment Shader").move_to(
             rasterization_label.get_center()
         )
         self.play(FadeOut(rasterization_label, shift=UP))
         self.play(FadeIn(fragment_shader_label, shift=DOWN))
         self.play(inside_pixels.animate.set_color(RED))
 
-        fragment_shader_diagram = OpenGLVGroup(fragment_shader_label, inside_pixels)
+        fragment_shader_diagram = VGroup(fragment_shader_label, inside_pixels)
         diagrams.add(fragment_shader_diagram.copy())
         self.interactive_embed()
 
         # Blending.
-        blending_label = OpenGLText("Blending").move_to(
+        blending_label = Text("Blending").move_to(
             fragment_shader_label.get_center()
         )
         self.play(FadeOut(fragment_shader_label, shift=UP))
         self.play(FadeIn(blending_label, shift=DOWN))
         self.play(inside_pixels.animate.set_opacity(0.7))
 
-        blending_diagram = OpenGLVGroup(blending_label, inside_pixels)
+        blending_diagram = VGroup(blending_label, inside_pixels)
         diagrams.add(blending_diagram.copy())
         self.interactive_embed()
 
         # Frame Buffer.
-        frame_buffer_label = OpenGLText("Frame Buffer").move_to(
+        frame_buffer_label = Text("Frame Buffer").move_to(
             blending_label.get_center()
         )
         self.play(FadeOut(blending_label, shift=UP))
@@ -160,7 +158,7 @@ class OpenGLPipeline(Scene):
         triangle.set_color(RED).set_opacity(0.7)
         self.play(FadeOut(inside_pixels), FadeIn(triangle), run_time=1)
 
-        frame_buffer_diagram = OpenGLVGroup(frame_buffer_label, triangle)
+        frame_buffer_diagram = VGroup(frame_buffer_label, triangle)
         diagrams.add(frame_buffer_diagram.copy())
         self.interactive_embed()
 
@@ -176,11 +174,11 @@ class OpenGLPipeline(Scene):
 
         diagrams[6].move_to(0 * RIGHT - 2.7 * UP)
 
-        triangle_with_label = OpenGLVGroup(frame_buffer_label, triangle)
+        triangle_with_label = VGroup(frame_buffer_label, triangle)
         triangle_with_label.generate_target()
         triangle_with_label.target.scale(0.5).move_to(diagrams[6].get_center())
         self.play(MoveToTarget(triangle_with_label))
-        self.play(FadeIn(OpenGLVGroup(diagrams[:-1])))
+        self.play(FadeIn(VGroup(diagrams[:-1])))
 
         self.interactive_embed()
 
@@ -242,10 +240,10 @@ class HalfScreenTriangle(Scene):
             ndc_location = point * np.array(
                 [config["frame_x_radius"], config["frame_y_radius"], 1]
             )
-            dot = OpenGLDot().move_to(ndc_location)
+            dot = Dot().move_to(ndc_location)
             dots.append(dot)
 
-            label = OpenGLMathTex(f"P_{i}").next_to(dot, offsets[i])
+            label = MathTex(f"P_{i}").next_to(dot, offsets[i])
             labels.append(label)
             self.add(label)
 
@@ -256,7 +254,7 @@ class HalfScreenTriangle(Scene):
             self.add(dot)
 
         def slider_callback(sender, data):
-            point = dpg.get_value(sender)
+            point = dearpygui.core.get_value(sender)
             mesh.attributes["position"][data] = np.array(point)
 
         for i in range(3):
@@ -345,7 +343,7 @@ class ProjectionVisualization(Scene):
         #     t += dt
 
         def slider_callback(sender, data):
-            t = dpg.get_value(sender)
+            t = dearpygui.core.get_value(sender)
             start = untransformed_points
             end = transformed_points
             mesh.attributes["position"] = (1 - t) * start + t * end
@@ -434,17 +432,17 @@ class ModelVisualization(Scene):
 
         def translation_callback(sender, data):
             nonlocal translation_matrix
-            coords = dpg.get_value(sender)
+            coords = dearpygui.core.get_value(sender)
             translation_matrix = opengl.translation_matrix(*coords)
 
         def rotation_callback(sender, data):
             nonlocal rotation_matrix
-            coords = dpg.get_value(sender)
+            coords = dearpygui.core.get_value(sender)
             rotation_matrix = opengl.rotation_matrix(*coords)
 
         def scale_callback(sender, data):
             nonlocal scale_matrix
-            val = dpg.get_value(sender)
+            val = dearpygui.core.get_value(sender)
             scale_matrix = opengl.scale_matrix(val)
 
         self.widgets.extend(
@@ -481,12 +479,12 @@ class ModelVisualization(Scene):
 class ViewVisualization(Scene):
     def construct(self):
         self.grid_size = 5
-        grid = OpenGLVGroup()
+        grid = VGroup()
 
         # Add x gridlines.
         for i in range(-self.grid_size, self.grid_size + 1):
             grid.add(
-                OpenGLLine(
+                Line(
                     UP * self.grid_size, DOWN * self.grid_size, stroke_opacity=0.5
                 ).shift(RIGHT * i)
             )
@@ -494,7 +492,7 @@ class ViewVisualization(Scene):
         # Add y gridlines.
         for i in range(-self.grid_size, self.grid_size + 1):
             grid.add(
-                OpenGLLine(
+                Line(
                     LEFT * self.grid_size, RIGHT * self.grid_size, stroke_opacity=0.5
                 ).shift(UP * i)
             )
@@ -504,33 +502,33 @@ class ViewVisualization(Scene):
         # Add the axes.
         z_radius = self.grid_size * 0.55
         self.add(
-            OpenGLLine(LEFT * self.grid_size, RIGHT * self.grid_size),
-            OpenGLLine(UP * self.grid_size, DOWN * self.grid_size),
-            OpenGLLine(IN * z_radius, OUT * z_radius),
+            Line(LEFT * self.grid_size, RIGHT * self.grid_size),
+            Line(UP * self.grid_size, DOWN * self.grid_size),
+            Line(IN * z_radius, OUT * z_radius),
         )
 
         def look_at_camera(mob):
             tutorial_utils.look_at(mob, self.camera.get_position(), looking_axis="z")
 
         # Add axis labels.
-        x_label_group = OpenGLVGroup()
+        x_label_group = VGroup()
         x_label_group.model_matrix = opengl.translation_matrix(
             x=self.grid_size + 0.3
         ) @ opengl.scale_matrix(1.2)
 
-        y_label_group = OpenGLVGroup()
+        y_label_group = VGroup()
         y_label_group.model_matrix = opengl.translation_matrix(
             y=self.grid_size + 0.3
         ) @ opengl.scale_matrix(1.2)
 
-        z_label_group = OpenGLVGroup()
+        z_label_group = VGroup()
         z_label_group.model_matrix = opengl.translation_matrix(
             z=z_radius + 0.3
         ) @ opengl.scale_matrix(1.2)
 
-        x_label = OpenGLMathTex("x")
-        y_label = OpenGLMathTex("y")
-        z_label = OpenGLMathTex("z")
+        x_label = MathTex("x")
+        y_label = MathTex("y")
+        z_label = MathTex("z")
 
         x_label_group.add(x_label, update_parent=True)
         y_label_group.add(y_label, update_parent=True)
@@ -659,13 +657,13 @@ class ViewVisualization(Scene):
 
         self.set_key_function(" ", switch_camera)
 
-        camera_frame = OpenGLVGroup()
+        camera_frame = VGroup()
         camera_frame.model_matrix = opengl.translation_matrix(
             z=-2
         ) @ opengl.scale_matrix(scale_factor=1 / 6)
         rotating_camera.add(camera_frame, update_parent=True)
 
-        shader_code = OpenGLText(
+        shader_code = Text(
             """
         // Vertex Shader
         in vec3 in_vert;
@@ -738,7 +736,7 @@ class ViewVisualization(Scene):
             mob.remove(*mob.brackets)
             brackets[0].next_to(mob, LEFT, mob.bracket_h_buff)
             brackets[1].next_to(mob, RIGHT, mob.bracket_h_buff)
-            mob.brackets = OpenGLVGroup(*brackets)
+            mob.brackets = VGroup(*brackets)
             mob.add(*brackets)
             mob.set_style(fill_color=color)
 
@@ -748,14 +746,14 @@ class ViewVisualization(Scene):
             )
         )
 
-        view_label = OpenGLText("View Matrix =", fill_color=BLUE)
+        view_label = Text("View Matrix =", fill_color=BLUE)
         view_label.model_matrix = (
             opengl.translation_matrix(x=-2.7)
             @ opengl.scale_matrix(scale_factor=0.5)
             @ view_label.model_matrix
         )
 
-        view_matrix_obj = OpenGLVGroup()
+        view_matrix_obj = VGroup()
         view_matrix_obj.add(projection_matrix, update_parent=True)
         view_matrix_obj.add(view_label, update_parent=True)
 
@@ -810,10 +808,10 @@ class ViewVisualization(Scene):
         )
         model_matrix.add_updater(lambda mob: update_matrix(mob, mesh.model_matrix, RED))
 
-        model_matrix_obj = OpenGLVGroup()
+        model_matrix_obj = VGroup()
         model_matrix_obj.add(model_matrix, update_parent=True)
 
-        model_label = OpenGLText("Model Matrix =", fill_color=RED)
+        model_label = Text("Model Matrix =", fill_color=RED)
         model_label.model_matrix = (
             opengl.translation_matrix(x=-2.7)
             @ opengl.scale_matrix(scale_factor=0.5)
@@ -910,9 +908,9 @@ class BarycentricInterpolation(Scene):
         mesh = Mesh(attributes=attributes, shader=shader)
         self.add(mesh)
 
-        vertex_dots = OpenGLVGroup(
+        vertex_dots = VGroup(
             *[
-                OpenGLDot(stroke_width=2.5, depth_test=True)
+                Dot(stroke_width=2.5, depth_test=True)
                 .move_to(point)
                 .shift(self.text_shift)
                 for point in self.triangle_corners
@@ -922,18 +920,18 @@ class BarycentricInterpolation(Scene):
             dot.data["fill_rgba"] = np.array([np.hstack((color, 1))])
 
         self.fragment_location = 1.5 * DOWN + LEFT
-        vertex_fragment_lines = OpenGLVGroup(
+        vertex_fragment_lines = VGroup(
             *[
-                OpenGLLine(point, self.fragment_location, depth_test=True).shift(
+                Line(point, self.fragment_location, depth_test=True).shift(
                     self.text_shift
                 )
                 for point in self.triangle_corners
             ]
         )
 
-        fragment_variables = OpenGLVGroup(
+        fragment_variables = VGroup(
             *[
-                OpenGLTex(f"$f_{i+1}$", depth_test=True).shift(
+                Tex(f"$f_{i+1}$", depth_test=True).shift(
                     self.triangle_corners[i]
                     + self.triangle_corner_label_offsets[i]
                     + self.text_shift
@@ -943,12 +941,12 @@ class BarycentricInterpolation(Scene):
         )
 
         interpolated_fragment = (
-            OpenGLTex("$f$", stroke_width=2.5, depth_test=True)
+            Tex("$f$", stroke_width=2.5, depth_test=True)
             .move_to(self.fragment_location)
             .shift(0.25 * RIGHT + 0.2 * UP + self.text_shift)
         )
         interpolated_dot = (
-            OpenGLDot(stroke_width=2.5, depth_test=True)
+            Dot(stroke_width=2.5, depth_test=True)
             .move_to(self.fragment_location)
             .shift(self.text_shift)
         )
@@ -968,9 +966,9 @@ class BarycentricInterpolation(Scene):
             RIGHT * -1.5 + UP * -1,
             RIGHT * -0.5 + UP * -2.5,
         ]
-        triangle_labels = OpenGLVGroup(
+        triangle_labels = VGroup(
             *[
-                OpenGLTex(f"$A_{i+1}$", depth_test=True).shift(
+                Tex(f"$A_{i+1}$", depth_test=True).shift(
                     self.triangle_label_locations[i] + self.text_shift
                 )
                 for i in range(3)
@@ -984,7 +982,7 @@ class BarycentricInterpolation(Scene):
 
         mesh.add_updater(update_mesh)
         self.play(
-            OpenGLVGroup(
+            VGroup(
                 vertex_fragment_lines,
                 vertex_dots,
                 triangle_labels,
@@ -999,13 +997,13 @@ class BarycentricInterpolation(Scene):
         mesh.clear_updaters()
 
         lambda_definition = (
-            OpenGLTex("$\lambda_i = \\frac{A_i}{A_1+A_2+A_3}$", depth_test=True)
+            Tex("$\lambda_i = \\frac{A_i}{A_1+A_2+A_3}$", depth_test=True)
             .scale(1.2)
             .shift(RIGHT * 3.5 + self.text_shift)
         )
         self.play(Write(lambda_definition))
 
-        barycentric_interpolation_description = OpenGLTex(
+        barycentric_interpolation_description = Tex(
             "The Barycentric interpolation\\\\$f$ of a fragment $p$ is given by\\\\$f=\lambda_1f_1+\lambda_2f_2+\lambda_3f_3$"
         ).to_edge(UP)
         self.play(Write(barycentric_interpolation_description))
@@ -1200,7 +1198,7 @@ class ThreeDLogo(Scene):
             "intensity": 0.5,
         }
 
-        letter = OpenGLMathTex("\\mathbb{M}").scale_to_fit_height(3)
+        letter = MathTex("\\mathbb{M}").scale_to_fit_height(3)
 
         subpaths = letter[0][0].get_subpaths()
         num_points = 0
@@ -1281,7 +1279,7 @@ class ThreeDLogo(Scene):
         # # Circle updaters.
         # def circle_callback(sender, _):
         #     nonlocal circle_diffuse
-        #     circle_diffuse = tuple(np.array(dpg.get_value(sender)[:3]) / 255)
+        #     circle_diffuse = tuple(np.array(dearpygui.core.get_value(sender)[:3]) / 255)
 
         # def update_circle(mesh):
         #     mesh.shader.set_uniform("diffuse", circle_diffuse)
@@ -1291,7 +1289,7 @@ class ThreeDLogo(Scene):
         # # Square updaters.
         # def square_callback(sender, _):
         #     nonlocal square_diffuse
-        #     square_diffuse = tuple(np.array(dpg.get_value(sender)[:3]) / 255)
+        #     square_diffuse = tuple(np.array(dearpygui.core.get_value(sender)[:3]) / 255)
 
         # def update_square(mesh):
         #     mesh.shader.set_uniform("diffuse", square_diffuse)
@@ -1302,7 +1300,7 @@ class ThreeDLogo(Scene):
         # def triangle_callback(sender, _):
         #     nonlocal triangle_diffuse
         #     triangle_diffuse = tuple(
-        #         np.array(dpg.get_value(sender)[:3]) / 255
+        #         np.array(dearpygui.core.get_value(sender)[:3]) / 255
         #     )
 
         # def update_triangle(mesh):
