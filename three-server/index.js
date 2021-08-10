@@ -457,3 +457,5 @@ var testServer = getServer();
 testServer.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), () => {
   testServer.start();
 });
+
+console.log("Listening on 0.0.0.0:50051...");
