@@ -43,7 +43,7 @@ function standardMaterial(call, callback) {
   (async () => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    await page.addScriptTag({path: '../three.js/build/three.min.js'});
+    await page.addScriptTag({path: './three.js/build/three.min.js'});
     const puppetResponse = await page.evaluate(() => {
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -79,7 +79,7 @@ function phongMaterial(call, callback) {
   (async () => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    await page.addScriptTag({path: '../three.js/build/three.min.js'});
+    await page.addScriptTag({path: './three.js/build/three.min.js'});
     const puppetResponse = await page.evaluate(() => {
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -115,7 +115,7 @@ function basicMaterial(call, callback) {
   (async () => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    await page.addScriptTag({path: '../three.js/build/three.min.js'});
+    await page.addScriptTag({path: './three.js/build/three.min.js'});
     const puppetResponse = await page.evaluate(() => {
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -124,7 +124,7 @@ function basicMaterial(call, callback) {
       document.body.appendChild(renderer.domElement);
 
       const geometry = new THREE.BoxGeometry(1, 1, 1);
-      const material = new THREE.MeshStandardMaterial({});
+      const material = new THREE.MeshBasicMaterial({});
       const object = new THREE.Mesh(geometry, material);
       scene.add(object);
 
@@ -148,30 +148,48 @@ function basicMaterial(call, callback) {
 }
 
 function icosahedronGeometry(call, callback) {
-	const geometry = new THREE.IcosahedronGeometry(
-		call.request.raius || 1,
-		call.request.detail || 0,
-	);
-	callback(null, serializeGeometry(geometry, wireframe=call.request.wireframe));
+  (async () => {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.addScriptTag({path: './three.js/build/three.min.js'});
+    const puppetResponse = await page.evaluate((call) => {
+      const geometry = new THREE.IcosahedronGeometry(
+        call.request.raius || 1,
+        call.request.detail || 0,
+      );
+      return { geometry };
+    }, call);
+    callback(null, serializePuppetGeometry(puppetResponse.geometry));
+    await browser.close();
+  })();
 }
 
 function torusKnotGeometry(call, callback) {
-	const geometry = new THREE.TorusKnotGeometry(
-		call.request.torus_radius || 1,
-		call.request.tube_radius || 0.4,
-		call.request.tubular_segments || 64,
-		call.request.radial_segments || 8,
-		call.request.p || 2,
-		call.request.q || 3,
-	);
-	callback(null, serializeGeometry(geometry, wireframe=call.request.wireframe));
+  (async () => {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.addScriptTag({path: './three.js/build/three.min.js'});
+    const puppetResponse = await page.evaluate((call) => {
+      const geometry = new THREE.TorusKnotGeometry(
+        call.request.torus_radius || 1,
+        call.request.tube_radius || 0.4,
+        call.request.tubular_segments || 64,
+        call.request.radial_segments || 8,
+        call.request.p || 2,
+        call.request.q || 3,
+      );
+      return { geometry };
+    }, call);
+    callback(null, serializePuppetGeometry(puppetResponse.geometry));
+    await browser.close();
+  })();
 }
 
 function boxGeometry(call, callback) {
   (async () => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    await page.addScriptTag({path: '../three.js/build/three.min.js'});
+    await page.addScriptTag({path: './three.js/build/three.min.js'});
     const puppetResponse = await page.evaluate((call) => {
       const geometry = new THREE.BoxGeometry(
         call.request.width || 1,
@@ -192,7 +210,7 @@ function sphereGeometry(call, callback) {
   (async () => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    await page.addScriptTag({path: '../three.js/build/three.min.js'});
+    await page.addScriptTag({path: './three.js/build/three.min.js'});
     const puppetResponse = await page.evaluate((call) => {
       const geometry = new THREE.SphereGeometry(
         call.request.radius || 1,
@@ -211,25 +229,43 @@ function sphereGeometry(call, callback) {
 }
 
 function tetrahedronGeometry(call, callback) {
-	const geometry = new THREE.TetrahedronGeometry(
-		call.request.radius || 1,
-		call.request.detail || 0,
-	);
-	callback(null, serializeGeometry(geometry, wireframe=call.request.wireframe));
+  (async () => {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.addScriptTag({path: './three.js/build/three.min.js'});
+    const puppetResponse = await page.evaluate((call) => {
+      const geometry = new THREE.TetrahedronGeometry(
+        call.request.radius || 1,
+        call.request.detail || 0,
+      );
+      return { geometry };
+    }, call);
+    callback(null, serializePuppetGeometry(puppetResponse.geometry));
+    await browser.close();
+  })();
 }
 
 function cylinderGeometry(call, callback) {
-	const geometry = new THREE.CylinderGeometry(
-		call.request.radius_top || 1,
-		call.request.radius_bottom || 1,
-		call.request.height || 1,
-		call.request.radial_segments || 8,
-		call.request.height_segments || 1,
-		call.request.open_ended || false,
-		call.request.theta_start || 0,
-		call.request.theta_length || 2 * Math.PI,
-	);
-	callback(null, serializeGeometry(geometry, wireframe=call.request.wireframe));
+  (async () => {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.addScriptTag({path: './three.js/build/three.min.js'});
+    const puppetResponse = await page.evaluate((call) => {
+      const geometry = new THREE.CylinderGeometry(
+        call.request.radius_top || 1,
+        call.request.radius_bottom || 1,
+        call.request.height || 1,
+        call.request.radial_segments || 8,
+        call.request.height_segments || 1,
+        call.request.open_ended || false,
+        call.request.theta_start || 0,
+        call.request.theta_length || 2 * Math.PI,
+      );
+      return { geometry };
+    }, call);
+    callback(null, serializePuppetGeometry(puppetResponse.geometry));
+    await browser.close();
+  })();
 }
 
 function coneGeometry(call, callback) {
@@ -269,7 +305,7 @@ function extrudeGeometry(call, callback) {
   (async () => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    await page.addScriptTag({path: '../three.js/build/three.min.js'});
+    await page.addScriptTag({path: './three.js/build/three.min.js'});
     const puppetResponse = await page.evaluate((call) => {
       let points = call.request.points;
       let pathIndices = call.request.path_indices;
