@@ -15,6 +15,13 @@ geometry_stub = threejs_pb2_grpc.GeometryServiceStub(channel)
 material_stub = threejs_pb2_grpc.MaterialServiceStub(channel)
 
 
+def grpc_again():
+    geometry_response = getattr(geometry_stub, f"Hello")(
+        getattr(threejs_pb2, f"HelloRequest")()
+    )
+    print(geometry_response.response)
+
+
 def get_geometry(name, config=None, wireframe=False):
     if config is None:
         config = {}

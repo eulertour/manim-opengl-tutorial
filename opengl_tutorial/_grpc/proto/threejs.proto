@@ -1,14 +1,6 @@
 syntax = "proto3";
 package testservice;
 
-service TestService {
-  rpc GetHello(HelloRequest) returns (HelloResponse) {}
-}
-message HelloRequest {}
-message HelloResponse {
-  string response = 1;
-}
-
 service GeometryService {
   rpc BoxGeometry(BoxGeometryRequest) returns (GeometryResponse) {}
   rpc SphereGeometry(SphereGeometryRequest) returns (GeometryResponse) {}

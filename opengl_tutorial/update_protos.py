@@ -7,7 +7,7 @@ import os
 
 grpc_dir = "_grpc"
 CMD_STRING = f"""
-poetry run python \
+python \
     -m grpc_tools.protoc \
     -I {grpc_dir}/proto \
     --python_out={grpc_dir}/gen \

@@ -1,6 +1,7 @@
 import collections
 
 import dearpygui.core
+import numpy as np
 
 import manim.utils.opengl as opengl
 import manim.utils.space_ops as space_ops
@@ -8,6 +9,36 @@ import tutorial_utils
 from manim import *
 from manim.opengl import *
 from manim.renderer.opengl_renderer import OpenGLCamera
+
+
+class GrpcAgain(Scene):
+    def construct(self):
+        self.point_lights.append(
+            {
+                "position": [0, 0, 0],
+                "color": [7, 7, 1],
+                "distance": 100,
+                "decay": 1,
+            }
+        )
+        self.ambient_light = {
+            "color": BLUE_B,
+            "intensity": 0.5,
+        }
+
+        sun = tutorial_utils.get_three_mesh(
+            self.renderer.context,
+            geometry_config={
+                "name": "SphereGeometry",
+                "width_segments": 18,
+                "height_segments": 18,
+            },
+            material_config={"name": "StandardMaterial", "emissive": (1, 1, 0)},
+        )
+        s = OpenGLSquare()
+        self.add(s)
+        self.add(sun)
+        self.wait(0.5)
 
 
 class OpenGLPipeline(Scene):
@@ -1181,6 +1212,50 @@ class HierarchicalModelMatrices(Scene):
         self.interactive_embed()
 
 
+class Gallery(Scene):
+    def construct(self):
+        self.point_lights.append(
+            {
+                "position": [0, 3, 11],
+                "color": [7, 7, 1],
+                "distance": 100,
+                "decay": 1,
+            }
+        )
+        self.ambient_light = {
+            "color": BLUE_B,
+            "intensity": 0.5,
+        }
+
+        sphere = tutorial_utils.get_three_mesh(
+            self.renderer.context,
+            geometry_config={
+                "name": "SphereGeometry",
+                "width_segments": 30,
+                "height_segments": 30,
+            },
+            material_config={
+                "name": "StandardMaterial",
+                "diffuse": np.array([95, 165, 95]) / 255,
+            },
+        )
+        self.add(sphere)
+
+        def geometry_callback(sender, data):
+            print(dearpygui.core.get_value(sender))
+
+        self.widgets.append(
+            {
+                "name": "geometry",
+                "widget": "combo",
+                "items": ["1", "2", "3"],
+                "callback": geometry_callback,
+            }
+        )
+
+        self.interactive_embed()
+
+
 class ThreeDLogo(Scene):
     def construct(self):
         config["background_color"] = "#ece6e2"
@@ -1361,7 +1436,7 @@ class ThreeDLogo(Scene):
 
             tutorial_utils.look_at(self.camera, ORIGIN)
 
-        self.add_updater(update_rotating_camera)
+        # self.add_updater(update_rotating_camera)
 
         self.interactive_embed()
         # self.wait(16)

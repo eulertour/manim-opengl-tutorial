@@ -19,67 +19,10 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\rthreejs.proto\x12\x0btestservice\"\x0e\n\x0cHelloRequest\"!\n\rHelloResponse\x12\x10\n\x08response\x18\x01 \x01(\t\"\x16\n\x14\x42\x61sicMaterialRequest\"\x16\n\x14PhongMaterialRequest\"\x19\n\x17StandardMaterialRequest\"B\n\x10MaterialResponse\x12\x15\n\rvertex_shader\x18\x01 \x01(\t\x12\x17\n\x0f\x66ragment_shader\x18\x02 \x01(\t\"O\n\x10GeometryResponse\x12\x10\n\x08position\x18\x01 \x03(\x02\x12\x0e\n\x06normal\x18\x02 \x03(\x02\x12\n\n\x02uv\x18\x03 \x03(\x02\x12\r\n\x05index\x18\x04 \x03(\x05\"\x9e\x01\n\x12\x42oxGeometryRequest\x12\r\n\x05width\x18\x01 \x01(\x02\x12\x0e\n\x06height\x18\x02 \x01(\x02\x12\r\n\x05\x64\x65pth\x18\x03 \x01(\x02\x12\x16\n\x0ewidth_segments\x18\x04 \x01(\x05\x12\x17\n\x0fheight_segments\x18\x05 \x01(\x05\x12\x16\n\x0e\x64\x65pth_segments\x18\x06 \x01(\x05\x12\x11\n\twireframe\x18\x07 \x01(\x08\"\xbd\x01\n\x15SphereGeometryRequest\x12\x0e\n\x06radius\x18\x01 \x01(\x02\x12\x16\n\x0ewidth_segments\x18\x02 \x01(\x05\x12\x17\n\x0fheight_segments\x18\x03 \x01(\x05\x12\x11\n\tphi_start\x18\x04 \x01(\x02\x12\x12\n\nphi_length\x18\x05 \x01(\x02\x12\x13\n\x0btheta_start\x18\x06 \x01(\x02\x12\x14\n\x0ctheta_length\x18\x07 \x01(\x02\x12\x11\n\twireframe\x18\x08 \x01(\x08\"\xa1\x01\n\x18TorusKnotGeometryRequest\x12\x14\n\x0ctorus_radius\x18\x01 \x01(\x02\x12\x13\n\x0btube_radius\x18\x02 \x01(\x02\x12\x18\n\x10tubular_segments\x18\x03 \x01(\x05\x12\x17\n\x0fradial_segments\x18\x04 \x01(\x05\x12\t\n\x01p\x18\x05 \x01(\x05\x12\t\n\x01q\x18\x06 \x01(\x05\x12\x11\n\twireframe\x18\x07 \x01(\x08\"O\n\x1aIcosahedronGeometryRequest\x12\x0e\n\x06radius\x18\x01 \x01(\x02\x12\x0e\n\x06\x64\x65tail\x18\x02 \x01(\x05\x12\x11\n\twireframe\x18\x03 \x01(\x08\"O\n\x1aTetrahedronGeometryRequest\x12\x0e\n\x06radius\x18\x01 \x01(\x02\x12\x0e\n\x06\x64\x65tail\x18\x02 \x01(\x05\x12\x11\n\twireframe\x18\x03 \x01(\x08\"\xd8\x01\n\x17\x43ylinderGeometryRequest\x12\x12\n\nradius_top\x18\x01 \x01(\x02\x12\x15\n\rradius_bottom\x18\x02 \x01(\x02\x12\x0e\n\x06height\x18\x03 \x01(\x02\x12\x17\n\x0fradial_segments\x18\x04 \x01(\x05\x12\x17\n\x0fheight_segments\x18\x05 \x01(\x05\x12\x12\n\nopen_ended\x18\x06 \x01(\x08\x12\x13\n\x0btheta_start\x18\x07 \x01(\x02\x12\x14\n\x0ctheta_length\x18\x08 \x01(\x02\x12\x11\n\twireframe\x18\t \x01(\x08\"\xb9\x01\n\x13\x43oneGeometryRequest\x12\x0e\n\x06radius\x18\x01 \x01(\x02\x12\x0e\n\x06height\x18\x02 \x01(\x02\x12\x17\n\x0fradial_segments\x18\x03 \x01(\x05\x12\x17\n\x0fheight_segments\x18\x04 \x01(\x05\x12\x12\n\nopen_ended\x18\x05 \x01(\x08\x12\x13\n\x0btheta_start\x18\x06 \x01(\x02\x12\x14\n\x0ctheta_length\x18\x07 \x01(\x02\x12\x11\n\twireframe\x18\x08 \x01(\x08\"w\n\x15\x43ircleGeometryRequest\x12\x0e\n\x06radius\x18\x01 \x01(\x02\x12\x10\n\x08segments\x18\x02 \x01(\x05\x12\x13\n\x0btheta_start\x18\x03 \x01(\x02\x12\x14\n\x0ctheta_length\x18\x04 \x01(\x02\x12\x11\n\twireframe\x18\x05 \x01(\x08\"y\n\x14PlaneGeometryRequest\x12\r\n\x05width\x18\x01 \x01(\x02\x12\x0e\n\x06height\x18\x02 \x01(\x02\x12\x16\n\x0ewidth_segments\x18\x03 \x01(\x05\x12\x17\n\x0fheight_segments\x18\x04 \x01(\x05\x12\x11\n\twireframe\x18\x05 \x01(\x08\"\xe1\x01\n\x16\x45xtrudeGeometryRequest\x12\x0e\n\x06points\x18\x01 \x03(\x02\x12\x14\n\x0cpath_indices\x18\x02 \x03(\x05\x12\r\n\x05steps\x18\x03 \x01(\x05\x12\r\n\x05\x64\x65pth\x18\x04 \x01(\x02\x12\x15\n\rbevel_enabled\x18\x05 \x01(\x08\x12\x17\n\x0f\x62\x65vel_thickness\x18\x06 \x01(\x02\x12\x12\n\nbevel_size\x18\x07 \x01(\x02\x12\x14\n\x0c\x62\x65vel_offset\x18\x08 \x01(\x02\x12\x16\n\x0e\x62\x65vel_segments\x18\t \x01(\x05\x12\x11\n\twireframe\x18\n \x01(\x08\x32R\n\x0bTestService\x12\x43\n\x08GetHello\x12\x19.testservice.HelloRequest\x1a\x1a.testservice.HelloResponse\"\x00\x32\x8b\x07\n\x0fGeometryService\x12O\n\x0b\x42oxGeometry\x12\x1f.testservice.BoxGeometryRequest\x1a\x1d.testservice.GeometryResponse\"\x00\x12U\n\x0eSphereGeometry\x12\".testservice.SphereGeometryRequest\x1a\x1d.testservice.GeometryResponse\"\x00\x12[\n\x11TorusKnotGeometry\x12%.testservice.TorusKnotGeometryRequest\x1a\x1d.testservice.GeometryResponse\"\x00\x12_\n\x13IcosahedronGeometry\x12\'.testservice.IcosahedronGeometryRequest\x1a\x1d.testservice.GeometryResponse\"\x00\x12_\n\x13TetrahedronGeometry\x12\'.testservice.TetrahedronGeometryRequest\x1a\x1d.testservice.GeometryResponse\"\x00\x12Y\n\x10\x43ylinderGeometry\x12$.testservice.CylinderGeometryRequest\x1a\x1d.testservice.GeometryResponse\"\x00\x12Q\n\x0c\x43oneGeometry\x12 .testservice.ConeGeometryRequest\x1a\x1d.testservice.GeometryResponse\"\x00\x12U\n\x0e\x43ircleGeometry\x12\".testservice.CircleGeometryRequest\x1a\x1d.testservice.GeometryResponse\"\x00\x12S\n\rPlaneGeometry\x12!.testservice.PlaneGeometryRequest\x1a\x1d.testservice.GeometryResponse\"\x00\x12W\n\x0f\x45xtrudeGeometry\x12#.testservice.ExtrudeGeometryRequest\x1a\x1d.testservice.GeometryResponse\"\x00\x32\x96\x02\n\x0fMaterialService\x12S\n\rBasicMaterial\x12!.testservice.BasicMaterialRequest\x1a\x1d.testservice.MaterialResponse\"\x00\x12S\n\rPhongMaterial\x12!.testservice.PhongMaterialRequest\x1a\x1d.testservice.MaterialResponse\"\x00\x12Y\n\x10StandardMaterial\x12$.testservice.StandardMaterialRequest\x1a\x1d.testservice.MaterialResponse\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\rthreejs.proto\x12\x0btestservice\"\x16\n\x14\x42\x61sicMaterialRequest\"\x16\n\x14PhongMaterialRequest\"\x19\n\x17StandardMaterialRequest\"B\n\x10MaterialResponse\x12\x15\n\rvertex_shader\x18\x01 \x01(\t\x12\x17\n\x0f\x66ragment_shader\x18\x02 \x01(\t\"O\n\x10GeometryResponse\x12\x10\n\x08position\x18\x01 \x03(\x02\x12\x0e\n\x06normal\x18\x02 \x03(\x02\x12\n\n\x02uv\x18\x03 \x03(\x02\x12\r\n\x05index\x18\x04 \x03(\x05\"\x9e\x01\n\x12\x42oxGeometryRequest\x12\r\n\x05width\x18\x01 \x01(\x02\x12\x0e\n\x06height\x18\x02 \x01(\x02\x12\r\n\x05\x64\x65pth\x18\x03 \x01(\x02\x12\x16\n\x0ewidth_segments\x18\x04 \x01(\x05\x12\x17\n\x0fheight_segments\x18\x05 \x01(\x05\x12\x16\n\x0e\x64\x65pth_segments\x18\x06 \x01(\x05\x12\x11\n\twireframe\x18\x07 \x01(\x08\"\xbd\x01\n\x15SphereGeometryRequest\x12\x0e\n\x06radius\x18\x01 \x01(\x02\x12\x16\n\x0ewidth_segments\x18\x02 \x01(\x05\x12\x17\n\x0fheight_segments\x18\x03 \x01(\x05\x12\x11\n\tphi_start\x18\x04 \x01(\x02\x12\x12\n\nphi_length\x18\x05 \x01(\x02\x12\x13\n\x0btheta_start\x18\x06 \x01(\x02\x12\x14\n\x0ctheta_length\x18\x07 \x01(\x02\x12\x11\n\twireframe\x18\x08 \x01(\x08\"\xa1\x01\n\x18TorusKnotGeometryRequest\x12\x14\n\x0ctorus_radius\x18\x01 \x01(\x02\x12\x13\n\x0btube_radius\x18\x02 \x01(\x02\x12\x18\n\x10tubular_segments\x18\x03 \x01(\x05\x12\x17\n\x0fradial_segments\x18\x04 \x01(\x05\x12\t\n\x01p\x18\x05 \x01(\x05\x12\t\n\x01q\x18\x06 \x01(\x05\x12\x11\n\twireframe\x18\x07 \x01(\x08\"O\n\x1aIcosahedronGeometryRequest\x12\x0e\n\x06radius\x18\x01 \x01(\x02\x12\x0e\n\x06\x64\x65tail\x18\x02 \x01(\x05\x12\x11\n\twireframe\x18\x03 \x01(\x08\"O\n\x1aTetrahedronGeometryRequest\x12\x0e\n\x06radius\x18\x01 \x01(\x02\x12\x0e\n\x06\x64\x65tail\x18\x02 \x01(\x05\x12\x11\n\twireframe\x18\x03 \x01(\x08\"\xd8\x01\n\x17\x43ylinderGeometryRequest\x12\x12\n\nradius_top\x18\x01 \x01(\x02\x12\x15\n\rradius_bottom\x18\x02 \x01(\x02\x12\x0e\n\x06height\x18\x03 \x01(\x02\x12\x17\n\x0fradial_segments\x18\x04 \x01(\x05\x12\x17\n\x0fheight_segments\x18\x05 \x01(\x05\x12\x12\n\nopen_ended\x18\x06 \x01(\x08\x12\x13\n\x0btheta_start\x18\x07 \x01(\x02\x12\x14\n\x0ctheta_length\x18\x08 \x01(\x02\x12\x11\n\twireframe\x18\t \x01(\x08\"\xb9\x01\n\x13\x43oneGeometryRequest\x12\x0e\n\x06radius\x18\x01 \x01(\x02\x12\x0e\n\x06height\x18\x02 \x01(\x02\x12\x17\n\x0fradial_segments\x18\x03 \x01(\x05\x12\x17\n\x0fheight_segments\x18\x04 \x01(\x05\x12\x12\n\nopen_ended\x18\x05 \x01(\x08\x12\x13\n\x0btheta_start\x18\x06 \x01(\x02\x12\x14\n\x0ctheta_length\x18\x07 \x01(\x02\x12\x11\n\twireframe\x18\x08 \x01(\x08\"w\n\x15\x43ircleGeometryRequest\x12\x0e\n\x06radius\x18\x01 \x01(\x02\x12\x10\n\x08segments\x18\x02 \x01(\x05\x12\x13\n\x0btheta_start\x18\x03 \x01(\x02\x12\x14\n\x0ctheta_length\x18\x04 \x01(\x02\x12\x11\n\twireframe\x18\x05 \x01(\x08\"y\n\x14PlaneGeometryRequest\x12\r\n\x05width\x18\x01 \x01(\x02\x12\x0e\n\x06height\x18\x02 \x01(\x02\x12\x16\n\x0ewidth_segments\x18\x03 \x01(\x05\x12\x17\n\x0fheight_segments\x18\x04 \x01(\x05\x12\x11\n\twireframe\x18\x05 \x01(\x08\"\xe1\x01\n\x16\x45xtrudeGeometryRequest\x12\x0e\n\x06points\x18\x01 \x03(\x02\x12\x14\n\x0cpath_indices\x18\x02 \x03(\x05\x12\r\n\x05steps\x18\x03 \x01(\x05\x12\r\n\x05\x64\x65pth\x18\x04 \x01(\x02\x12\x15\n\rbevel_enabled\x18\x05 \x01(\x08\x12\x17\n\x0f\x62\x65vel_thickness\x18\x06 \x01(\x02\x12\x12\n\nbevel_size\x18\x07 \x01(\x02\x12\x14\n\x0c\x62\x65vel_offset\x18\x08 \x01(\x02\x12\x16\n\x0e\x62\x65vel_segments\x18\t \x01(\x05\x12\x11\n\twireframe\x18\n \x01(\x08\x32\x8b\x07\n\x0fGeometryService\x12O\n\x0b\x42oxGeometry\x12\x1f.testservice.BoxGeometryRequest\x1a\x1d.testservice.GeometryResponse\"\x00\x12U\n\x0eSphereGeometry\x12\".testservice.SphereGeometryRequest\x1a\x1d.testservice.GeometryResponse\"\x00\x12[\n\x11TorusKnotGeometry\x12%.testservice.TorusKnotGeometryRequest\x1a\x1d.testservice.GeometryResponse\"\x00\x12_\n\x13IcosahedronGeometry\x12\'.testservice.IcosahedronGeometryRequest\x1a\x1d.testservice.GeometryResponse\"\x00\x12_\n\x13TetrahedronGeometry\x12\'.testservice.TetrahedronGeometryRequest\x1a\x1d.testservice.GeometryResponse\"\x00\x12Y\n\x10\x43ylinderGeometry\x12$.testservice.CylinderGeometryRequest\x1a\x1d.testservice.GeometryResponse\"\x00\x12Q\n\x0c\x43oneGeometry\x12 .testservice.ConeGeometryRequest\x1a\x1d.testservice.GeometryResponse\"\x00\x12U\n\x0e\x43ircleGeometry\x12\".testservice.CircleGeometryRequest\x1a\x1d.testservice.GeometryResponse\"\x00\x12S\n\rPlaneGeometry\x12!.testservice.PlaneGeometryRequest\x1a\x1d.testservice.GeometryResponse\"\x00\x12W\n\x0f\x45xtrudeGeometry\x12#.testservice.ExtrudeGeometryRequest\x1a\x1d.testservice.GeometryResponse\"\x00\x32\x96\x02\n\x0fMaterialService\x12S\n\rBasicMaterial\x12!.testservice.BasicMaterialRequest\x1a\x1d.testservice.MaterialResponse\"\x00\x12S\n\rPhongMaterial\x12!.testservice.PhongMaterialRequest\x1a\x1d.testservice.MaterialResponse\"\x00\x12Y\n\x10StandardMaterial\x12$.testservice.StandardMaterialRequest\x1a\x1d.testservice.MaterialResponse\"\x00\x62\x06proto3'
 )
 
 
-
-
-_HELLOREQUEST = _descriptor.Descriptor(
-  name='HelloRequest',
-  full_name='testservice.HelloRequest',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=30,
-  serialized_end=44,
-)
-
-
-_HELLORESPONSE = _descriptor.Descriptor(
-  name='HelloResponse',
-  full_name='testservice.HelloResponse',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  create_key=_descriptor._internal_create_key,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='response', full_name='testservice.HelloResponse.response', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=46,
-  serialized_end=79,
-)
 
 
 _BASICMATERIALREQUEST = _descriptor.Descriptor(
@@ -102,8 +45,8 @@ _BASICMATERIALREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=81,
-  serialized_end=103,
+  serialized_start=30,
+  serialized_end=52,
 )
 
 
@@ -127,8 +70,8 @@ _PHONGMATERIALREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=105,
-  serialized_end=127,
+  serialized_start=54,
+  serialized_end=76,
 )
 
 
@@ -152,8 +95,8 @@ _STANDARDMATERIALREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=129,
-  serialized_end=154,
+  serialized_start=78,
+  serialized_end=103,
 )
 
 
@@ -191,8 +134,8 @@ _MATERIALRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=156,
-  serialized_end=222,
+  serialized_start=105,
+  serialized_end=171,
 )
 
 
@@ -244,8 +187,8 @@ _GEOMETRYRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=224,
-  serialized_end=303,
+  serialized_start=173,
+  serialized_end=252,
 )
 
 
@@ -318,8 +261,8 @@ _BOXGEOMETRYREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=306,
-  serialized_end=464,
+  serialized_start=255,
+  serialized_end=413,
 )
 
 
@@ -399,8 +342,8 @@ _SPHEREGEOMETRYREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=467,
-  serialized_end=656,
+  serialized_start=416,
+  serialized_end=605,
 )
 
 
@@ -473,8 +416,8 @@ _TORUSKNOTGEOMETRYREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=659,
-  serialized_end=820,
+  serialized_start=608,
+  serialized_end=769,
 )
 
 
@@ -519,8 +462,8 @@ _ICOSAHEDRONGEOMETRYREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=822,
-  serialized_end=901,
+  serialized_start=771,
+  serialized_end=850,
 )
 
 
@@ -565,8 +508,8 @@ _TETRAHEDRONGEOMETRYREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=903,
-  serialized_end=982,
+  serialized_start=852,
+  serialized_end=931,
 )
 
 
@@ -653,8 +596,8 @@ _CYLINDERGEOMETRYREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=985,
-  serialized_end=1201,
+  serialized_start=934,
+  serialized_end=1150,
 )
 
 
@@ -734,8 +677,8 @@ _CONEGEOMETRYREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1204,
-  serialized_end=1389,
+  serialized_start=1153,
+  serialized_end=1338,
 )
 
 
@@ -794,8 +737,8 @@ _CIRCLEGEOMETRYREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1391,
-  serialized_end=1510,
+  serialized_start=1340,
+  serialized_end=1459,
 )
 
 
@@ -854,8 +797,8 @@ _PLANEGEOMETRYREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1512,
-  serialized_end=1633,
+  serialized_start=1461,
+  serialized_end=1582,
 )
 
 
@@ -949,12 +892,10 @@ _EXTRUDEGEOMETRYREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1636,
-  serialized_end=1861,
+  serialized_start=1585,
+  serialized_end=1810,
 )
 
-DESCRIPTOR.message_types_by_name['HelloRequest'] = _HELLOREQUEST
-DESCRIPTOR.message_types_by_name['HelloResponse'] = _HELLORESPONSE
 DESCRIPTOR.message_types_by_name['BasicMaterialRequest'] = _BASICMATERIALREQUEST
 DESCRIPTOR.message_types_by_name['PhongMaterialRequest'] = _PHONGMATERIALREQUEST
 DESCRIPTOR.message_types_by_name['StandardMaterialRequest'] = _STANDARDMATERIALREQUEST
@@ -971,20 +912,6 @@ DESCRIPTOR.message_types_by_name['CircleGeometryRequest'] = _CIRCLEGEOMETRYREQUE
 DESCRIPTOR.message_types_by_name['PlaneGeometryRequest'] = _PLANEGEOMETRYREQUEST
 DESCRIPTOR.message_types_by_name['ExtrudeGeometryRequest'] = _EXTRUDEGEOMETRYREQUEST
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
-
-HelloRequest = _reflection.GeneratedProtocolMessageType('HelloRequest', (_message.Message,), {
-  'DESCRIPTOR' : _HELLOREQUEST,
-  '__module__' : 'threejs_pb2'
-  # @@protoc_insertion_point(class_scope:testservice.HelloRequest)
-  })
-_sym_db.RegisterMessage(HelloRequest)
-
-HelloResponse = _reflection.GeneratedProtocolMessageType('HelloResponse', (_message.Message,), {
-  'DESCRIPTOR' : _HELLORESPONSE,
-  '__module__' : 'threejs_pb2'
-  # @@protoc_insertion_point(class_scope:testservice.HelloResponse)
-  })
-_sym_db.RegisterMessage(HelloResponse)
 
 BasicMaterialRequest = _reflection.GeneratedProtocolMessageType('BasicMaterialRequest', (_message.Message,), {
   'DESCRIPTOR' : _BASICMATERIALREQUEST,
@@ -1093,41 +1020,15 @@ _sym_db.RegisterMessage(ExtrudeGeometryRequest)
 
 
 
-_TESTSERVICE = _descriptor.ServiceDescriptor(
-  name='TestService',
-  full_name='testservice.TestService',
-  file=DESCRIPTOR,
-  index=0,
-  serialized_options=None,
-  create_key=_descriptor._internal_create_key,
-  serialized_start=1863,
-  serialized_end=1945,
-  methods=[
-  _descriptor.MethodDescriptor(
-    name='GetHello',
-    full_name='testservice.TestService.GetHello',
-    index=0,
-    containing_service=None,
-    input_type=_HELLOREQUEST,
-    output_type=_HELLORESPONSE,
-    serialized_options=None,
-    create_key=_descriptor._internal_create_key,
-  ),
-])
-_sym_db.RegisterServiceDescriptor(_TESTSERVICE)
-
-DESCRIPTOR.services_by_name['TestService'] = _TESTSERVICE
-
-
 _GEOMETRYSERVICE = _descriptor.ServiceDescriptor(
   name='GeometryService',
   full_name='testservice.GeometryService',
   file=DESCRIPTOR,
-  index=1,
+  index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=1948,
-  serialized_end=2855,
+  serialized_start=1813,
+  serialized_end=2720,
   methods=[
   _descriptor.MethodDescriptor(
     name='BoxGeometry',
@@ -1239,11 +1140,11 @@ _MATERIALSERVICE = _descriptor.ServiceDescriptor(
   name='MaterialService',
   full_name='testservice.MaterialService',
   file=DESCRIPTOR,
-  index=2,
+  index=1,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=2858,
-  serialized_end=3136,
+  serialized_start=2723,
+  serialized_end=3001,
   methods=[
   _descriptor.MethodDescriptor(
     name='BasicMaterial',

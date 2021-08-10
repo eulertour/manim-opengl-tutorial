@@ -3,14 +3,17 @@ from manim.renderer.shader import Shader
 
 # Move the #extension directive earlier in the file.
 def move_extension_to_start(shader):
-    shader_lines = shader.split("\n")
-    extension_line = None
-    for i, line in enumerate(shader_lines):
-        if line.startswith("#extension"):
-            extension_line = shader_lines.pop(i)
-    new_shader_lines = shader_lines
-    new_shader_lines.insert(1, extension_line)
-    return "\n".join(new_shader_lines)
+    return shader
+    # shader_lines = shader.split("\n")
+    # extension_line = None
+    # for i, line in enumerate(shader_lines):
+    #     # if line.startswith("#extension"):
+    #     #     extension_line = shader_lines.pop(i)
+    #     if "extension" in line:
+    #         print(line)
+    # new_shader_lines = shader_lines
+    # new_shader_lines.insert(1, extension_line)
+    # return "\n".join(new_shader_lines)
 
 
 class Material(Shader):
