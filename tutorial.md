@@ -24,47 +24,33 @@ TODO: Fill out vocabulary
 
 
 ## Vocabulary
-* **Shader**
+* **Shader** - A shader is a program that runs on a GPU.
 
-  A shader is a program that runs on a GPU.
-
-* **Homogeneous Coordinates**
-
-  The coordinate system that OpenGL draws in is constrained to
+* **Homogeneous Coordinates** - The coordinate system that OpenGL draws in is constrained to
   a 2x2x2 cube with the x, y, and z axes ranging from -1 to +1.
 
-* **Normalized Device Coordinates**
-
-  The coordinate system that OpenGL draws in is constrained to
+* **Normalized Device Coordinates** - The coordinate system that OpenGL draws in is constrained to
   a 2x2x2 cube with the x, y, and z axes ranging from -1 to +1.
 
-* **Fragment**
+* **Fragment** - A pixel-sized piece of a primitive.
 
-  A pixel-sized piece of a primitive.
+* **Frame Buffer** - A collection of buffers that can be used as a target for rendering.
 
-* **Frame Buffer**
+* **Geometry** - A list of vertices representing the shape of an object.
 
-* **Mesh**
+* **Material** - A collection of shaders representing the way the object's physical
+  properties e.g. color, shininess, opacity.
 
-* **Model Space**
+* **Mesh** - A combination of a geometry and material which represents
+  a single drawable entity in OpenGL.
 
-  v
+* **Model Space** - A coordinate space which is local to a geometry (v).
 
-* **World Space**
+* **World Space** - The global coordinate space (M * v).
 
-  M * v
+* **Camera Space** - The camera's model space (V * M * v).
 
-* **Camera Space**
-
-  V * M * v
-
-* **Clip Space**
-
-  P * V * M * v
-
-* **Mesh**
-
-  A single drawable entity in OpenGL.
+* **Clip Space** - A coordinate system in normalized device coordinates (P * V * M * v).
 
 ## OpenGL pipeline
 * **Vertices**
