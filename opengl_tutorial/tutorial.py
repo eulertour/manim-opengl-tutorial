@@ -2,6 +2,7 @@ import collections
 
 import dearpygui.core
 import numpy as np
+from colour import Color
 
 import manim.utils.opengl as opengl
 import manim.utils.space_ops as space_ops
@@ -1214,10 +1215,12 @@ class HierarchicalModelMatrices(Scene):
 
 class Gallery(Scene):
     def construct(self):
+        config["background_color"] = "#ece6e2"
+        default_light_position = [3, 3, 1]
         self.point_lights.append(
             {
-                "position": [0, 3, 11],
-                "color": [7, 7, 1],
+                "position": default_light_position,
+                "color": [5, 5, 5],
                 "distance": 100,
                 "decay": 1,
             }
@@ -1227,29 +1230,130 @@ class Gallery(Scene):
             "intensity": 0.5,
         }
 
-        sphere = tutorial_utils.get_three_mesh(
+        self.light_indicator = tutorial_utils.get_three_mesh(
             self.renderer.context,
             geometry_config={
-                "name": "SphereGeometry",
-                "width_segments": 30,
-                "height_segments": 30,
+                "name": "IcosahedronGeometry",
             },
             material_config={
-                "name": "StandardMaterial",
-                "diffuse": np.array([95, 165, 95]) / 255,
+                "name": "BasicMaterial",
             },
         )
-        self.add(sphere)
+        self.light_indicator.model_matrix = opengl.scale_matrix(1 / 3)
+        self.light_indicator.model_matrix[:3, 3] = np.array(
+            np.array(default_light_position)
+        )
+        self.add(self.light_indicator)
+
+        default_geometry_name = "BoxGeometry"
+        default_material_name = "StandardMaterial"
+        default_diffuse = np.array([55, 55, 125]) / 255
+        default_mesh = tutorial_utils.get_three_mesh(
+            self.renderer.context,
+            geometry_config={
+                "name": default_geometry_name,
+            },
+            material_config={
+                "name": default_material_name,
+                "diffuse": default_diffuse,
+            },
+        )
+        self.add(default_mesh)
+
+        current_geometry_name = default_geometry_name
+        new_geometry_name = default_geometry_name
+        current_material_name = default_material_name
+        new_material_name = default_material_name
+        current_mesh = default_mesh
+
+        def update_mesh(dt):
+            nonlocal current_geometry_name, current_material_name, current_mesh
+            if (
+                current_geometry_name != new_geometry_name
+                or current_material_name != new_material_name
+            ):
+                new_mesh = tutorial_utils.get_three_mesh(
+                    self.renderer.context,
+                    geometry_config={
+                        "name": new_geometry_name,
+                    },
+                    material_config={
+                        "name": new_material_name,
+                        "diffuse": default_diffuse,
+                    },
+                )
+                self.remove(current_mesh)
+                self.add(new_mesh)
+                current_mesh = new_mesh
+                current_geometry_name = new_geometry_name
+                current_material_name = new_material_name
+
+        self.add_updater(update_mesh)
 
         def geometry_callback(sender, data):
-            print(dearpygui.core.get_value(sender))
+            nonlocal new_geometry_name
+            new_geometry_name = dearpygui.core.get_value(sender)
+
+        def material_callback(sender, data):
+            nonlocal new_material_name
+            new_material_name = dearpygui.core.get_value(sender)
+
+        def background_color_callback(sender, data):
+            arr = np.array(dearpygui.core.get_value(sender))[:3] / 255
+            color = Color(rgb=tuple(arr))
+            config["background_color"] = color.hex_l
+
+        def light_position_callback(sender, data):
+            self.point_lights[0]["position"] = list(dearpygui.core.get_value(sender))
+            self.light_indicator.model_matrix[:3, 3] = np.array(
+                dearpygui.core.get_value(sender)
+            )
 
         self.widgets.append(
             {
                 "name": "geometry",
                 "widget": "combo",
-                "items": ["1", "2", "3"],
+                "items": [
+                    "SphereGeometry",
+                    "BoxGeometry",
+                    "TorusKnotGeometry",
+                    "IcosahedronGeometry",
+                    "TetrahedronGeometry",
+                    "CylinderGeometry",
+                ],
+                "default_value": default_geometry_name,
                 "callback": geometry_callback,
+            }
+        )
+        self.widgets.append(
+            {
+                "name": "material",
+                "widget": "combo",
+                "items": [
+                    "BasicMaterial",
+                    "PhongMaterial",
+                    "StandardMaterial",
+                ],
+                "default_value": default_material_name,
+                "callback": material_callback,
+            }
+        )
+        self.widgets.append(
+            {
+                "name": "background color",
+                "widget": "color_edit3",
+                "callback": background_color_callback,
+                "default_value": (0, 0, 0, 0),
+            }
+        )
+        self.widgets.append(
+            {
+                "name": "light position",
+                "widget": "slider_float3",
+                "callback": light_position_callback,
+                "min_value": -20,
+                "max_value": 20,
+                "default_value": tuple(default_light_position),
             }
         )
 
