@@ -11,11 +11,19 @@ var packageDefinition = protoLoader.loadSync("service.proto", {
 });
 var testservice = grpc.loadPackageDefinition(packageDefinition).testservice;
 
-const perspectiveCamera = new THREE.PerspectiveCamera(45, 1, 0.1, 100)
-const orthographicCamera = new THREE.OrthographicCamera(-7.1, 7.1, 4, -4, 1, 21)
-perspectiveCamera.position.z = 11;
-orthographicCamera.position.z = 11;
-const scene = new THREE.Scene()
+let browser, page;
+(async () => {
+  browser = await puppeteer.launch();
+  page = await browser.newPage();
+  await page.addScriptTag({path: './three.js/build/three.min.js'});
+
+  var threeServer = getServer();
+  threeServer.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), () => {
+    threeServer.start();
+  });
+
+  console.log("Listening on 0.0.0.0:50051...");
+})();
 
 function getServer() {
   var server = new grpc.Server();
@@ -41,9 +49,6 @@ function getServer() {
 
 function standardMaterial(call, callback) {
   (async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.addScriptTag({path: './three.js/build/three.min.js'});
     const puppetResponse = await page.evaluate(() => {
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -71,15 +76,11 @@ function standardMaterial(call, callback) {
       };
     });
     callback(null, puppetResponse);
-    await browser.close();
   })();
 }
 
 function phongMaterial(call, callback) {
   (async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.addScriptTag({path: './three.js/build/three.min.js'});
     const puppetResponse = await page.evaluate(() => {
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -107,15 +108,11 @@ function phongMaterial(call, callback) {
       };
     });
     callback(null, puppetResponse);
-    await browser.close();
   })();
 }
 
 function basicMaterial(call, callback) {
   (async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.addScriptTag({path: './three.js/build/three.min.js'});
     const puppetResponse = await page.evaluate(() => {
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -143,15 +140,11 @@ function basicMaterial(call, callback) {
       };
     });
     callback(null, puppetResponse);
-    await browser.close();
   })();
 }
 
 function icosahedronGeometry(call, callback) {
   (async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.addScriptTag({path: './three.js/build/three.min.js'});
     const puppetResponse = await page.evaluate((call) => {
       const geometry = new THREE.IcosahedronGeometry(
         call.request.raius || 1,
@@ -160,15 +153,11 @@ function icosahedronGeometry(call, callback) {
       return { geometry };
     }, call);
     callback(null, serializePuppetGeometry(puppetResponse.geometry));
-    await browser.close();
   })();
 }
 
 function torusKnotGeometry(call, callback) {
   (async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.addScriptTag({path: './three.js/build/three.min.js'});
     const puppetResponse = await page.evaluate((call) => {
       const geometry = new THREE.TorusKnotGeometry(
         call.request.torus_radius || 1,
@@ -181,15 +170,11 @@ function torusKnotGeometry(call, callback) {
       return { geometry };
     }, call);
     callback(null, serializePuppetGeometry(puppetResponse.geometry));
-    await browser.close();
   })();
 }
 
 function boxGeometry(call, callback) {
   (async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.addScriptTag({path: './three.js/build/three.min.js'});
     const puppetResponse = await page.evaluate((call) => {
       const geometry = new THREE.BoxGeometry(
         call.request.width || 1,
@@ -202,15 +187,11 @@ function boxGeometry(call, callback) {
       return { geometry };
     }, call);
     callback(null, serializePuppetGeometry(puppetResponse.geometry));
-    await browser.close();
   })();
 }
 
 function sphereGeometry(call, callback) {
   (async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.addScriptTag({path: './three.js/build/three.min.js'});
     const puppetResponse = await page.evaluate((call) => {
       const geometry = new THREE.SphereGeometry(
         call.request.radius || 1,
@@ -224,15 +205,11 @@ function sphereGeometry(call, callback) {
       return { geometry };
     }, call);
     callback(null, serializePuppetGeometry(puppetResponse.geometry));
-    await browser.close();
   })();
 }
 
 function tetrahedronGeometry(call, callback) {
   (async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.addScriptTag({path: './three.js/build/three.min.js'});
     const puppetResponse = await page.evaluate((call) => {
       const geometry = new THREE.TetrahedronGeometry(
         call.request.radius || 1,
@@ -241,15 +218,11 @@ function tetrahedronGeometry(call, callback) {
       return { geometry };
     }, call);
     callback(null, serializePuppetGeometry(puppetResponse.geometry));
-    await browser.close();
   })();
 }
 
 function cylinderGeometry(call, callback) {
   (async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.addScriptTag({path: './three.js/build/three.min.js'});
     const puppetResponse = await page.evaluate((call) => {
       const geometry = new THREE.CylinderGeometry(
         call.request.radius_top || 1,
@@ -264,48 +237,59 @@ function cylinderGeometry(call, callback) {
       return { geometry };
     }, call);
     callback(null, serializePuppetGeometry(puppetResponse.geometry));
-    await browser.close();
   })();
 }
 
 function coneGeometry(call, callback) {
-	const geometry = new THREE.ConeGeometry(
-    call.request.radius || 1,
-    call.request.height || 1,
-    call.request.radial_segments || 8,
-    call.request.height_segments || 1,
-    call.request.open_ended || false,
-    call.request.theta_start || 0,
-    call.request.theta_length || 2 * Math.PI,
-	);
-	callback(null, serializeGeometry(geometry, wireframe=call.request.wireframe));
+  (async () => {
+    const puppetResponse = await page.evaluate((call) => {
+      const geometry = new THREE.ConeGeometry(
+        call.request.radius || 1,
+        call.request.height || 1,
+        call.request.radial_segments || 8,
+        call.request.height_segments || 1,
+        call.request.open_ended || false,
+        call.request.theta_start || 0,
+        call.request.theta_length || 2 * Math.PI,
+      );
+      return { geometry };
+    }, call);
+    callback(null, serializePuppetGeometry(puppetResponse.geometry));
+  })();
 }
 
 function circleGeometry(call, callback) {
-	const geometry = new THREE.CircleGeometry(
-    call.request.radius || 1,
-    call.request.segments || 8,
-    call.request.theta_start || 0,
-    call.request.theta_length || 2 * Math.PI,
-	);
-	callback(null, serializeGeometry(geometry, wireframe=call.request.wireframe));
+  (async () => {
+    const puppetResponse = await page.evaluate((call) => {
+      const geometry = new THREE.CircleGeometry(
+        call.request.radius || 1,
+        call.request.segments || 8,
+        call.request.theta_start || 0,
+        call.request.theta_length || 2 * Math.PI,
+      );
+      return { geometry };
+    }, call);
+    callback(null, serializePuppetGeometry(puppetResponse.geometry));
+  })();
 }
 
 function planeGeometry(call, callback) {
-	const geometry = new THREE.PlaneGeometry(
-    call.request.width || 1,
-    call.request.height || 1,
-    call.request.width_segments || 1,
-    call.request.height_segments || 1,
-	);
-	callback(null, serializeGeometry(geometry, wireframe=call.request.wireframe));
+  (async () => {
+    const puppetResponse = await page.evaluate((call) => {
+      const geometry = new THREE.PlaneGeometry(
+        call.request.width || 1,
+        call.request.height || 1,
+        call.request.width_segments || 1,
+        call.request.height_segments || 1,
+      );
+      return { geometry };
+    }, call);
+    callback(null, serializePuppetGeometry(puppetResponse.geometry));
+  })();
 }
 
 function extrudeGeometry(call, callback) {
   (async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.addScriptTag({path: './three.js/build/three.min.js'});
     const puppetResponse = await page.evaluate((call) => {
       let points = call.request.points;
       let pathIndices = call.request.path_indices;
@@ -392,28 +376,7 @@ function extrudeGeometry(call, callback) {
       return { geometry };
     }, call);
     callback(null, serializePuppetGeometry(puppetResponse.geometry));
-    await browser.close();
   })();
-}
-
-function serializeGeometry(geometry, wireframe=false) {
-	let response;
-	if (wireframe) {
-		let wireframe = new THREE.WireframeGeometry(geometry);
-		response = {
-			position: Array.from(wireframe.attributes.position.array),
-		}
-  } else {
-		response = {
-			position: Array.from(geometry.attributes.position.array),
-			normal: Array.from(geometry.attributes.normal.array),
-			uv: Array.from(geometry.attributes.uv.array),
-		};
-		if (geometry.index !== null) {
-			response.index = Array.from(geometry.index.array);
-		}
-	}
-	return response;
 }
 
 function serializePuppetGeometry(geometry) {
@@ -441,21 +404,3 @@ function puppetObjectToArray(obj) {
     }
   }
 }
-
-function geometry(call, callback) {
-	const geo = new THREE.OctahedronGeometry();
-	let resp = {
-		position: Array.from(geo.attributes.position.array),
-	};
-	if (geo.index !== null) {
-		resp.index = Array.from(geo.index.array);
-	}
-	callback(null, resp);
-}
-
-var testServer = getServer();
-testServer.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), () => {
-  testServer.start();
-});
-
-console.log("Listening on 0.0.0.0:50051...");

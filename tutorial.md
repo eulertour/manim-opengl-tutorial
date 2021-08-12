@@ -13,15 +13,10 @@
   * Geometries and materials
 * Lighting
   * Normal matrices
+* Textures
 * Putting it together
 
-TODO: Add information about attributes, uniforms,
-and varyings while going over shaders.
 TODO: Add a FullScreenQuad example.
-TODO: Hands-on example?
-TODO: Some/one section on lighting / normal matrices?
-TODO: Fill out vocabulary
-
 
 ## Vocabulary
 * **Shader** - A shader is a program that runs on a GPU.
@@ -172,8 +167,6 @@ The fragment data from the fragment shader is then blended in
 order to determine the color of each pixel and written to the
 frame buffer.
 
-## Homogeneous Coordinates
-
 ## Normalized Device Coordinates
 
 The coordinate system that OpenGL draws in is constrained to
@@ -241,6 +234,15 @@ vertex_shader="""
 This vertex shader takes a projection and model matrix and
 uses them to transform each point prior to outputting them.
 
+## Homogeneous Coordinates
+Homogeneous coordinates offer a way of representing 3D
+coordinates as 4 dimensional vectors. As a rule of
+thumb, points represented with homogeneous coordinates
+should have 1 as their w coordinate and vectors
+represented with homogeneous coordinates should have
+0 as their w coordinate. More information is at
+https://www.tomdalling.com/blog/modern-opengl/explaining-homogenous-coordinates-and-projective-geometry/.
+
 ## View Matrix
 The view matrix encodes the position of our world's camera.
 Since any affine transformation to the camera is equivalent
@@ -256,6 +258,8 @@ There is a lot of theory one could go into regarding this, but
 for the purposes of this lesson just know that **orthographic** 
 projection matrices do not have a concept of perspective, while
 **perspective** projection matrices do.
+
+More information is at https://jsantell.com/3d-projection/.
 
 ## Barycentric Interpolation
 OpenGL determines the inputs to the fragment shader for each

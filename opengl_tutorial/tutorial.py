@@ -53,7 +53,25 @@ class OpenGLPipeline(Scene):
         ).shift(0.5 * DOWN)
 
         vertices_label = OpenGLText("Vertices").next_to(vertices, UP, buff=0.5)
-        self.add(vertices, vertices_label)
+        vertex_data = (
+            OpenGLVGroup(
+                OpenGLVGroup(
+                    OpenGLText("position: (x1, y1, z1)"),
+                    OpenGLText("normal: (nx1, ny1, nz1)").shift(DOWN),
+                ),
+                OpenGLVGroup(
+                    OpenGLText("position: (x2, y2, z2)").shift(2 * DOWN),
+                    OpenGLText("normal: (nx2, ny2, nz2)").shift(3 * DOWN),
+                ).shift(0.5 * DOWN),
+                OpenGLVGroup(
+                    OpenGLText("position: (x3, y3, z3)").shift(4 * DOWN),
+                    OpenGLText("normal: (nx3, ny3, nz3)").shift(5 * DOWN),
+                ).shift(DOWN),
+            )
+            .scale(0.5)
+            .next_to(vertices_label, DOWN, buff=0.5)
+        )
+        self.add(vertex_data, vertices_label)
 
         # Vertices.
         self.play(FadeIn(vertices_label, shift=DOWN))
@@ -67,7 +85,10 @@ class OpenGLPipeline(Scene):
             vertices_label.get_center()
         )
         self.play(FadeOut(vertices_label, shift=UP))
-        self.play(FadeIn(vertex_shader_label, shift=DOWN))
+        self.play(
+            FadeIn(vertex_shader_label, shift=DOWN),
+            ReplacementTransform(vertex_data, vertices),
+        )
 
         vertex_shader_diagram = OpenGLVGroup(vertex_shader_label, vertices)
         diagrams.add(vertex_shader_diagram.copy())
@@ -358,6 +379,7 @@ class ProjectionVisualization(Scene):
         transformed_mesh.attributes["position"] = (
             projection @ transformed_mesh.attributes["position"].T
         ).T
+        print(transformed_mesh.attributes["position"])
 
         untransformed_points = untransformed_mesh.attributes["position"].copy()
         transformed_points = transformed_mesh.attributes["position"].copy()
@@ -392,6 +414,80 @@ class ProjectionVisualization(Scene):
         )
 
         # mesh.add_updater(update_mesh)
+        self.add(mesh)
+
+        self.renderer.camera = OpenGLCamera(orthographic=True)
+        grid = tutorial_utils.get_grid_lines(7, 5)
+
+        def toggle_grid_lines():
+            if grid in self.mobjects:
+                self.remove(grid)
+            else:
+                self.add(grid)
+
+        self.set_key_function(" ", toggle_grid_lines)
+
+        self.interactive_embed()
+
+
+class InputTypes(Scene):
+    def construct(self):
+        shader = Shader(
+            self.renderer.context,
+            source=dict(
+                vertex_shader="""
+                    #version 330
+
+                    in vec4 position;
+                    uniform mat4 projection;
+                    out vec4 color;
+
+                    void main() {
+                        if (position.x > 0.0) {
+                            color = vec4(0, 0, 1, 1);
+                        } else {
+                            color = vec4(1, 0, 0, 1);
+                        }
+                        gl_Position = projection * position;
+                    }
+                """,
+                fragment_shader="""
+                    #version 330
+
+                    in vec4 color;
+                    out vec4 frag_color;
+
+                    void main() {
+                        frag_color = color;
+                    }
+                """,
+            ),
+        )
+
+        attributes = np.zeros(3, dtype=[("position", np.float32, (4,))])
+        attributes["position"] = np.array(
+            [
+                [-1, -1, 0, 1],
+                [-1, 1, 0, 1],
+                [1, 1, 0, 1],
+            ]
+        )
+
+        mesh = Mesh(shader, attributes)
+
+        width = config["frame_width"]
+        height = config["frame_height"]
+        depth = 20
+        projection = np.array(
+            [
+                [2 / width, 0, 0, 0],
+                [0, 2 / height, 0, 0],
+                [0, 0, 2 / depth, 0],
+                [0, 0, 0, 1],
+            ]
+        )
+        mesh.shader.set_uniform("projection", tuple(projection.T.ravel()))
+
         self.add(mesh)
 
         self.renderer.camera = OpenGLCamera(orthographic=True)
@@ -505,6 +601,86 @@ class ModelVisualization(Scene):
         )
 
         mesh.add_updater(update_mesh)
+        self.interactive_embed()
+
+
+class UpdateMesh(Scene):
+    def construct(self):
+        shader = Shader(
+            self.renderer.context,
+            source=dict(
+                vertex_shader="""
+                    #version 330
+
+                    uniform mat4 projection;
+                    uniform mat4 model;
+                    in vec4 position;
+
+                    void main() {
+                        gl_Position = projection * model * position;
+                    }
+                """,
+                fragment_shader="""
+                    #version 330
+
+                    out vec4 frag_color;
+
+                    void main() {
+                      frag_color = vec4(1, 0, 0, 1);
+                    }
+                """,
+            ),
+        )
+
+        projection = opengl.orthographic_projection_matrix(near=-10, far=10)
+        shader.shader_program["projection"] = projection
+
+        model = tuple(np.eye(4).T.ravel())
+        shader.shader_program["model"] = model
+
+        attributes = np.zeros(6, dtype=[("position", np.float32, (4,))])
+        attributes["position"] = np.array(
+            [
+                [-1, -1, 0, 1],
+                [-1, 1, 0, 1],
+                [1, 1, 0, 1],
+                [-1, -1, 0, 1],
+                [1, -1, 0, 1],
+                [1, 1, 0, 1],
+            ]
+        )
+        mesh = Mesh(shader, attributes)
+
+        # attributes = np.zeros(4, dtype=[("position", np.float32, (4,))])
+        # attributes["position"] = np.array(
+        #     [
+        #         [-1, -1, 0, 1],
+        #         [-1, 1, 0, 1],
+        #         [1, 1, 0, 1],
+        #         [1, -1, 0, 1],
+        #     ]
+        # )
+        # mesh = Mesh(shader, attributes, indices=np.array([0, 1, 2, 0, 3, 2]))
+
+        self.add(mesh)
+
+        t = 0
+
+        def update_mesh(dt):
+            nonlocal t
+            transformation_matrix = np.array(
+                [
+                    [1, 0, 0, t],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, 0],
+                    [0, 0, 0, 1],
+                ]
+            )
+            t += dt
+            mesh.shader.set_uniform("model", tuple(transformation_matrix.T.ravel()))
+
+        self.add_updater(update_mesh)
+
         self.interactive_embed()
 
 
@@ -1215,8 +1391,8 @@ class HierarchicalModelMatrices(Scene):
 
 class Gallery(Scene):
     def construct(self):
-        config["background_color"] = "#ece6e2"
-        default_light_position = [3, 3, 1]
+        config["background_color"] = "#2A2A2A"
+        default_light_position = [3, 3, 2]
         self.point_lights.append(
             {
                 "position": default_light_position,
@@ -1320,6 +1496,9 @@ class Gallery(Scene):
                     "IcosahedronGeometry",
                     "TetrahedronGeometry",
                     "CylinderGeometry",
+                    "ConeGeometry",
+                    "CircleGeometry",
+                    "PlaneGeometry",
                 ],
                 "default_value": default_geometry_name,
                 "callback": geometry_callback,
@@ -1343,7 +1522,7 @@ class Gallery(Scene):
                 "name": "background color",
                 "widget": "color_edit3",
                 "callback": background_color_callback,
-                "default_value": (0, 0, 0, 0),
+                "default_value": (42, 42, 42, 0),
             }
         )
         self.widgets.append(
@@ -1356,6 +1535,59 @@ class Gallery(Scene):
                 "default_value": tuple(default_light_position),
             }
         )
+
+        translation_matrix = np.eye(4)
+        rotation_matrix = np.eye(4)
+        scale_matrix = np.eye(4)
+
+        def update_mesh(dt):
+            model_matrix = translation_matrix @ rotation_matrix @ scale_matrix
+            current_mesh.model_matrix = model_matrix
+            # current_mesh.normal_matrix = model_matrix
+
+        def translation_callback(sender, data):
+            nonlocal translation_matrix
+            coords = dearpygui.core.get_value(sender)
+            translation_matrix = opengl.translation_matrix(*coords)
+
+        def rotation_callback(sender, data):
+            nonlocal rotation_matrix
+            coords = dearpygui.core.get_value(sender)
+            rotation_matrix = opengl.rotation_matrix(*coords)
+
+        def scale_callback(sender, data):
+            nonlocal scale_matrix
+            val = dearpygui.core.get_value(sender)
+            scale_matrix = opengl.scale_matrix(val)
+
+        self.widgets.extend(
+            [
+                {
+                    "name": "translation",
+                    "widget": "slider_float3",
+                    "callback": translation_callback,
+                    "min_value": -10,
+                    "max_value": 10,
+                },
+                {
+                    "name": "rotation",
+                    "widget": "slider_float3",
+                    "callback": rotation_callback,
+                    "min_value": -PI,
+                    "max_value": PI,
+                },
+                {
+                    "name": "scale",
+                    "widget": "slider_float",
+                    "callback": scale_callback,
+                    "min_value": -PI,
+                    "max_value": PI,
+                    "default_value": 1,
+                },
+            ]
+        )
+
+        self.add_updater(update_mesh)
 
         self.interactive_embed()
 
