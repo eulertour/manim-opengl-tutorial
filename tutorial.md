@@ -47,39 +47,24 @@ TODO: Add a FullScreenQuad example.
 
 * **Clip Space** - A coordinate system in normalized device coordinates (P * V * M * v).
 
+* **Affine Transformation** - A transformation that preserves lines and parallelism
+  (but not necessarily distances and angles).
+
+
 ## OpenGL pipeline
-* **Vertices**
+* **Vertices** - A list of data points each of which have the same attributes.
 
-  Essentially a list of data points each of which have the same attributes.
+* **Vertex Shader** - Read in vertices and outputs positional data.
 
-* **Vertex Shader**
+* **Primitives Generation** - Convert vertex positions into one of a few different primitives.
 
-  Reads in vertices and outputs positional data.
+* **Rasterization** - Convert each primitive into fragments (pixel-sized parts).
 
-* **Primitives Generation**
+* **Fragment Shader** - Determine color and opacity for each fragment.
 
-  Convert vertex positions into one of a few different primitives.
+* **Blending** - Determine colors for each pixel by combining fragment data.
 
-* **Rasterization**
-
-  Convert each primitive into fragments (pixel-sized parts).
-
-* **Fragment Shader**
-
-  Determine color and opacity for each fragment.
-
-* **Blending**
-
-  Determine colors for each pixel by combining fragment data.
-
-* **Frame Buffer**
-
-  Pixel data is written to a frame buffer and rendered to the screen.
-
-* **Affine Transformation**
-
-  An affine transformation is a transformation that preserves lines
-  and parallelism (but not necessarily distances and angles).
+* **Frame Buffer** - Pixel data is written to a frame buffer and rendered to the screen.
 
 ## Using Manim to render a triangle with OpenGL
 ```py

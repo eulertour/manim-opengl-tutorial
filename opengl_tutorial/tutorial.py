@@ -77,7 +77,7 @@ class OpenGLPipeline(Scene):
         self.play(FadeIn(vertices_label, shift=DOWN))
         self.interactive_embed()
 
-        vertices_diagram = OpenGLVGroup(vertices_label, vertices)
+        vertices_diagram = OpenGLVGroup(vertex_data, vertices_label)
         diagrams.add(vertices_diagram.copy())
 
         # Vertex Shader.
@@ -270,6 +270,7 @@ class HalfScreenTriangle(Scene):
         mesh = Mesh(shader, attributes)
         self.add(mesh)
 
+        # Uncomment to move points.
         orthographic_camera = OpenGLCamera(orthographic=True)
         self.renderer.camera = orthographic_camera
 
@@ -379,7 +380,6 @@ class ProjectionVisualization(Scene):
         transformed_mesh.attributes["position"] = (
             projection @ transformed_mesh.attributes["position"].T
         ).T
-        print(transformed_mesh.attributes["position"])
 
         untransformed_points = untransformed_mesh.attributes["position"].copy()
         transformed_points = transformed_mesh.attributes["position"].copy()
@@ -387,7 +387,6 @@ class ProjectionVisualization(Scene):
         mesh = Mesh(shader, attributes)
 
         # t = 0
-
         # def update_mesh(mesh, dt):
         #     nonlocal t
         #     start = untransformed_points
@@ -664,13 +663,13 @@ class UpdateMesh(Scene):
 
         self.add(mesh)
 
-        t = 0
+        t = 0.1
 
         def update_mesh(dt):
             nonlocal t
             transformation_matrix = np.array(
                 [
-                    [1, 0, 0, t],
+                    [1, 0, 0, 0],
                     [0, 1, 0, 0],
                     [0, 0, 1, 0],
                     [0, 0, 0, 1],
@@ -681,6 +680,113 @@ class UpdateMesh(Scene):
 
         self.add_updater(update_mesh)
 
+        self.interactive_embed()
+
+
+class ViewIntuitionVisualization(Scene):
+    def construct(self):
+        shader = Shader(
+            self.renderer.context,
+            source=dict(
+                vertex_shader="""
+                    #version 330
+
+                    uniform mat4 projection;
+                    uniform mat4 view;
+                    uniform mat4 model;
+                    in vec4 position;
+
+                    void main() {
+                        gl_Position = projection * view * model * position;
+                    }
+                """,
+                fragment_shader="""
+                    #version 330
+
+                    out vec4 frag_color;
+
+                    void main() {
+                      frag_color = vec4(1, 0, 0, 1);
+                    }
+                """,
+            ),
+        )
+
+        projection = opengl.orthographic_projection_matrix(near=1, far=21)
+        shader.shader_program["projection"] = projection
+
+        camera_model = np.eye(4)
+        camera_model[:3, 3] = np.array([0, 0, 11])
+        shader.shader_program["view"] = tuple(np.linalg.inv(camera_model).T.ravel())
+
+        model = tuple(np.eye(4).T.ravel())
+        shader.shader_program["model"] = model
+
+        attributes = np.zeros(3, dtype=[("position", np.float32, (4,))])
+        attributes["position"] = np.array(
+            [
+                [-1, -1, 0, 1],
+                [-1, 1, 0, 1],
+                [1, 1, 0, 1],
+            ]
+        )
+
+        mesh = Mesh(shader, attributes)
+        self.add(mesh)
+
+        translation_matrix = camera_model
+        rotation_matrix = np.eye(4)
+        scale_matrix = np.eye(4)
+
+        def update_mesh(mesh, dt):
+            camera_model_matrix = translation_matrix @ rotation_matrix @ scale_matrix
+            view_matrix = np.linalg.inv(camera_model_matrix)
+            mesh.shader.shader_program["view"] = tuple(view_matrix.T.ravel())
+
+        def translation_callback(sender, data):
+            nonlocal translation_matrix
+            coords = dearpygui.core.get_value(sender)
+            translation_matrix = opengl.translation_matrix(*coords)
+
+        def rotation_callback(sender, data):
+            nonlocal rotation_matrix
+            coords = dearpygui.core.get_value(sender)
+            rotation_matrix = opengl.rotation_matrix(*coords)
+
+        def scale_callback(sender, data):
+            nonlocal scale_matrix
+            val = dearpygui.core.get_value(sender)
+            scale_matrix = opengl.scale_matrix(val)
+
+        self.widgets.extend(
+            [
+                {
+                    "name": "translation",
+                    "widget": "slider_float3",
+                    "callback": translation_callback,
+                    "min_value": -20,
+                    "max_value": 20,
+                    "default_value": (0, 0, 11),
+                },
+                {
+                    "name": "rotation",
+                    "widget": "slider_float3",
+                    "callback": rotation_callback,
+                    "min_value": -PI,
+                    "max_value": PI,
+                },
+                {
+                    "name": "scale",
+                    "widget": "slider_float",
+                    "callback": scale_callback,
+                    "min_value": -PI,
+                    "max_value": PI,
+                    "default_value": 1,
+                },
+            ]
+        )
+
+        mesh.add_updater(update_mesh)
         self.interactive_embed()
 
 
@@ -1056,7 +1162,7 @@ class ViewVisualization(Scene):
 class BarycentricInterpolation(Scene):
     def construct(self):
         self.renderer.camera = OpenGLCamera(orthographic=True)
-        self.skip_animation_preview = True
+        # self.skip_animation_preview = True
         # config["background_color"] = "#656565"
         self.triangle_corners = [
             np.array([-4, -3, 0]),
@@ -1306,7 +1412,7 @@ class BarycentricInterpolation(Scene):
                 child.data["fill_rgba"] = np.array([np.hstack((color, 1))])
 
         self.add_updater(update_color)
-        self.skip_animation_preview = False
+        # self.skip_animation_preview = False
 
         self.interactive_embed()
 
@@ -1543,7 +1649,7 @@ class Gallery(Scene):
         def update_mesh(dt):
             model_matrix = translation_matrix @ rotation_matrix @ scale_matrix
             current_mesh.model_matrix = model_matrix
-            # current_mesh.normal_matrix = model_matrix
+            current_mesh.normal_matrix = model_matrix
 
         def translation_callback(sender, data):
             nonlocal translation_matrix
@@ -1748,7 +1854,7 @@ class ThreeDLogo(Scene):
         logo.add(square)
         logo.add(triangle)
         logo.model_matrix = (
-            opengl.translation_matrix(y=-2.5)
+            opengl.translation_matrix(y=-2.5, z=0.6)
             @ opengl.x_rotation_matrix(x=PI / 2)
             @ logo.model_matrix
         )
@@ -1772,7 +1878,7 @@ class ThreeDLogo(Scene):
 
             tutorial_utils.look_at(self.camera, ORIGIN)
 
-        # self.add_updater(update_rotating_camera)
+        self.add_updater(update_rotating_camera)
 
         self.interactive_embed()
         # self.wait(16)
